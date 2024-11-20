@@ -14,9 +14,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final CustomUserDetailsService customUserDetailsService;
+    private final UserDetailsServiceImplementation customUserDetailsService;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(UserDetailsServiceImplementation userDetailsService) {
         this.customUserDetailsService = userDetailsService;
     }
 
@@ -26,6 +26,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET,"/api/app/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST,"/api/app/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE,"/api/app/**").hasRole("USER")
                         .requestMatchers("/api/auth/**").permitAll()
 
 

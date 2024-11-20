@@ -5,11 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,9 +27,15 @@ public class AppUser {
     @Column(unique = true)
     private String email;
     private String password;
-    @Builder.Default
-    private String role = "USER";
-    @Builder.Default
-    private LocalDateTime registrationDate = LocalDateTime.now();
+    private String role;
+    @CreationTimestamp
+    @Column(name = "created_at",updatable = false)
+    private LocalDateTime createdAt;
 
+    public AppUser(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = "USER";
+    }
 }

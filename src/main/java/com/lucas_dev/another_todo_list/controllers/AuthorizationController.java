@@ -3,6 +3,7 @@ package com.lucas_dev.another_todo_list.controllers;
 import com.lucas_dev.another_todo_list.dtos.response.ApiResponseDTO;
 import com.lucas_dev.another_todo_list.dtos.user.AppUserCreateDTO;
 import com.lucas_dev.another_todo_list.dtos.user.AppUserDTO;
+import com.lucas_dev.another_todo_list.models.AppUser;
 import com.lucas_dev.another_todo_list.services.AppUserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,9 +24,10 @@ public class AuthorizationController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponseDTO<AppUserDTO>> createUser(@Valid @RequestBody AppUserCreateDTO createUserDTO) {
-        AppUserDTO createdUser = appUserService.createUser(createUserDTO);
-        ApiResponseDTO<AppUserDTO> response = new ApiResponseDTO<>(createdUser, "User registered correctly", true);
+    public ResponseEntity<ApiResponseDTO<AppUserDTO>> createUser(@Valid @RequestBody AppUserCreateDTO appUserCreateDTO) {
+        AppUser appUser = appUserService.createUser(appUserCreateDTO);
+        AppUserDTO appUserDTO = new AppUserDTO(appUser);
+        ApiResponseDTO<AppUserDTO> response = new ApiResponseDTO<>(appUserDTO, "User registered correctly", true);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @GetMapping("/current-user")

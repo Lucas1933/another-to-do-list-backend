@@ -8,6 +8,6 @@ import java.time.LocalDateTime;
 public record AppUserDTO(String name, String email, LocalDateTime registrationDate, Integer userId) {
 
     public AppUserDTO(@NotNull AppUser appUser) {
-        this(appUser.getName(), appUser.getEmail(), appUser.getRegistrationDate(), appUser.getId());
+        this(appUser.getName(), appUser.getEmail(), appUser.getCreatedAt(), appUser.getId());
     }
 }

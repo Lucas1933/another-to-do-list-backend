@@ -1,9 +1,15 @@
 package com.lucas_dev.another_todo_list.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="task")
 public class Task {
@@ -17,77 +23,19 @@ public class Task {
 
     private String name;
     private String description;
-    private LocalDateTime creationDate;
-    private LocalDateTime completionDate;
+    @CreationTimestamp
+    @Column(name = "created_at",updatable = false)
+    private LocalDateTime createdAt;
+    private LocalDateTime completedAt;
     private boolean completed;
 
 
-    public Task() {
-    }
-
-    public Task(Integer id, ToDoList toDoList, String name, String description, LocalDateTime creationDate, LocalDateTime completionDate, boolean completed) {
-        this.id = id;
-        this.toDoList = toDoList;
+    public Task (String name, String description, ToDoList toDoList){
         this.name = name;
         this.description = description;
-        this.creationDate = creationDate;
-        this.completionDate = completionDate;
-        this.completed = completed;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public ToDoList getToDoList() {
-        return toDoList;
-    }
-
-    public void setToDoList(ToDoList toDoList) {
         this.toDoList = toDoList;
+        this.completed = false;
+        this.completedAt = null;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public LocalDateTime getCompletionDate() {
-        return completionDate;
-    }
-
-    public void setCompletionDate(LocalDateTime completionDate) {
-        this.completionDate = completionDate;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
 }
