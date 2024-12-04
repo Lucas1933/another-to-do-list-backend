@@ -30,8 +30,12 @@ public class AuthorizationController {
         ApiResponseDTO<AppUserDTO> response = new ApiResponseDTO<>(appUserDTO, "User registered correctly", true);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+
     @GetMapping("/current-user")
     public Authentication getCurrentUser() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
+
+
 }

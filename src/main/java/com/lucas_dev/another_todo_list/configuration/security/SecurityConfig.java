@@ -28,7 +28,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/app/**").hasRole("USER")
                         .requestMatchers(HttpMethod.POST,"/api/app/**").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE,"/api/app/**").hasRole("USER")
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.PATCH,"/api/app/**").hasRole("USER")
+                        .requestMatchers("/api/auth/**").anonymous()
 
 
                 )

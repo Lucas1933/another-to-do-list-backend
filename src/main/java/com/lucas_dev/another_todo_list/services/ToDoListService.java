@@ -6,6 +6,7 @@ import com.lucas_dev.another_todo_list.models.AppUser;
 import com.lucas_dev.another_todo_list.models.Task;
 import com.lucas_dev.another_todo_list.models.ToDoList;
 import com.lucas_dev.another_todo_list.repositories.ToDoListRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +26,8 @@ public class ToDoListService {
         ToDoList toDoList = toDoListRepository.findById(toDoListId).orElseThrow(() -> new RuntimeException("To do list could not be found"));
         Task task = new Task(taskCreateDTO.name(), taskCreateDTO.description(), toDoList);
         toDoList.addTask(task);
-        toDoListRepository.save(toDoList);
-        return task;
+        ToDoList persistedToDoList = toDoListRepository.save(toDoList);
+        return persistedToDoList.getTasks().get(persistedToDoList.getTasks().size() - 1);
     }
 
 
@@ -50,4 +51,12 @@ public class ToDoListService {
         toDoListRepository.delete(toDoList);
     }
 
+    public void updateToDoList(Integer toDoListId, Integer appUserId, @Valid ToDoListCreateDTO toDoListCreateDTO) {
+        ToDoList toDoList = toDoListRepository.findById(toDoListId).orElseThrow(() -> new RuntimeException("List with id " + toDoListId + " does not exists"));
+        if (!toDoList.getAppUser().getId().equals(appUserId)) {
+            throw new RuntimeException("You are not authorized to delete this ToDoList");
+        }
+        toDoList.setTitle(toDoListCreateDTO.title());
+        toDoListRepository.save(toDoList);
+    }
 }

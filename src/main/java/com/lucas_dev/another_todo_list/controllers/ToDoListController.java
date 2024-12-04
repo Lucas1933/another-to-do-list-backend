@@ -3,6 +3,7 @@ package com.lucas_dev.another_todo_list.controllers;
 import com.lucas_dev.another_todo_list.configuration.security.AuthenticatedUserService;
 import com.lucas_dev.another_todo_list.dtos.response.ApiResponseDTO;
 import com.lucas_dev.another_todo_list.dtos.response.ApiSimpleResponseDTO;
+import com.lucas_dev.another_todo_list.dtos.task.TaskCompletionDTO;
 import com.lucas_dev.another_todo_list.dtos.task.TaskCreateDTO;
 import com.lucas_dev.another_todo_list.dtos.task.TaskDTO;
 import com.lucas_dev.another_todo_list.dtos.todolist.ToDoListCreateDTO;
@@ -65,6 +66,13 @@ public class ToDoListController {
         toDoListService.deleteToDoListById(toDoListId, appUserId);
         ApiSimpleResponseDTO response = new ApiSimpleResponseDTO("To do list with id " + toDoListId + "was deleted", true);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updateToDoListTitle(@PathVariable("id") Integer toDoListId,@Valid @RequestBody ToDoListCreateDTO toDoListCreateDTO){
+        Integer appUserId = authenticatedUserService.getCurrentUserId();
+        toDoListService.updateToDoList(toDoListId,appUserId,toDoListCreateDTO);
+        return ResponseEntity.noContent().build();
     }
 
 

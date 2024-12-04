@@ -1,13 +1,10 @@
 package com.lucas_dev.another_todo_list.configuration.security;
 
-import com.lucas_dev.another_todo_list.models.AppUser;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
 
 public class UserDetailsImplementation implements UserDetails {
 
