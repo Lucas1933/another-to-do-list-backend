@@ -1,11 +1,19 @@
 # Usamos una imagen base ligera con OpenJDK 17
 FROM openjdk:17-jdk-slim
 
-# Establece el directorio de trabajo dentro del contenedor
+# Copia los archivos fuente al contenedor
+COPY . /app
 WORKDIR /app
 
-# Copia el archivo JAR de tu aplicación al contenedor
-COPY target/*.jar another-todo-list-0.0.1-SNAPSHOT.jar
+# Da permisos de ejecución al wrapper de Maven
+RUN chmod +x mvnw
+
+# Construye el JAR
+RUN ./mvnw clean package
+
+# Copia el JAR generado a la ubicación final
+ARG JAR_FILE=target/another-todo-list-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} app.jar
 
 # Exponemos el puerto en el que corre la aplicación
 EXPOSE 8080
