@@ -13,7 +13,7 @@ RUN ./mvnw clean package -DskipTests
 
 # Copia el JAR generado a la ubicación final
 ARG JAR_FILE=target/another-todo-list-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
+COPY ${JAR_FILE} another-todo-list-0.0.1-SNAPSHOT.jar
 
 # Exponemos el puerto en el que corre la aplicación
 EXPOSE 8080
