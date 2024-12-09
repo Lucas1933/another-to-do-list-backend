@@ -1,0 +1,29 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: my-app-container
+    depends_on:
+      - postgres-db
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - my-net
+    ports:
+      - "8080:8080"
+
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: lucaspkdev
+      POSTGRES_PASSWORD: milanesaconpure
+      POSTGRES_DB: another-todo-list-db
+    ports:
+      - "5432:5432"
+    networks:
+      - my-net
+
+networks:
+  my-net:
