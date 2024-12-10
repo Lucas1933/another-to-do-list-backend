@@ -1,18 +1,23 @@
-# Usamos una imagen base ligera con OpenJDK 17
+# Imagen base de Java
+FROM openjdk:17-jdk-slim AS build
+
+# Copiar el código fuente
+WORKDIR /app
+COPY . .
+
+# Compilar el .jar
+RUN chmod +x mvnw && ./mvnw clean package -DskipTests
+
+# Imagen de runtime
 FROM openjdk:17-jdk-slim
 
-# Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copia el archivo JAR de tu aplicación al contenedor
-COPY compiled/*.jar another-todo-list-0.0.1-SNAPSHOT.jar
+# Copiar el .jar generado desde la fase anterior
+COPY --from=build /app/target/another-todo-list-0.0.1-SNAPSHOT.jar app.jar
 
-# Exponemos el puerto en el que corre la aplicación
+# Exponer el puerto (informativo)
 EXPOSE 8080
 
-# Variables de entorno
-ENV SPRING_PROFILES_ACTIVE=dev
-
-
 # Comando para ejecutar la aplicación
-CMD ["java", "-jar", "another-todo-list-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
