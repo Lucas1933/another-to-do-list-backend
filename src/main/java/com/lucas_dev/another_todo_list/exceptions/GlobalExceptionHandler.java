@@ -1,6 +1,7 @@
 package com.lucas_dev.another_todo_list.exceptions;
-import com.lucas_dev.another_todo_list.dtos.response.ErrorResponseDTO;
+import com.lucas_dev.another_todo_list.dtos.response.ApiErrorResponseDTO;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -23,28 +24,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // Override for handling MethodArgumentNotValidException - when validation on an argument annotated with @Valid fails
 
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request){
+        String message = "Validation failed for one or more fields";
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error -> {
             errors.put(error.getField(), error.getDefaultMessage());
         });
-        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO("Validation failed for one or more fields",HttpStatus.BAD_REQUEST.value(), LocalDateTime.now().withNano(0),errors);
-        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
+        ApiErrorResponseDTO apiErrorResponseDTO = new ApiErrorResponseDTO(message,HttpStatus.BAD_REQUEST.value(), LocalDateTime.now().withNano(0),errors);
+        return new ResponseEntity<>(apiErrorResponseDTO, HttpStatus.BAD_REQUEST);
     }
 
-    // Standardized response for ConstraintViolationException - typically used for @Validated on method parameters
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponseDTO> handleConstraintViolationExceptions(ConstraintViolationException ex) {
-
-        Map<String, String> errors = new HashMap<>();
-        ex.getConstraintViolations().forEach(violation -> {
-            String fieldName = violation.getPropertyPath().toString();
-            String errorMessage = violation.getMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO("Validation failed for one or more fields",HttpStatus.BAD_REQUEST.value(), LocalDateTime.now().withNano(0),errors);
-        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ApiErrorResponseDTO> handleEmailAlreadyExists(EmailAlreadyExistsException ex) {
+        String message = "Email already registered";
+        String errors = ex.getMessage();
+        ApiErrorResponseDTO apiErrorResponseDTO = new ApiErrorResponseDTO(message,HttpStatus.CONFLICT.value(), LocalDateTime.now().withNano(0),errors);
+        return new ResponseEntity<>(apiErrorResponseDTO, HttpStatus.CONFLICT);
     }
+
 
     // Standardized response for other exceptions
     @ExceptionHandler(Exception.class)
