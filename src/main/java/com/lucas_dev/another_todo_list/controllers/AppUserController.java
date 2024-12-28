@@ -27,7 +27,6 @@ public class AppUserController {
         AppUser appUser = appUserService.findUserById(id);
         AppUserDTO appUserDTO = new AppUserDTO(appUser);
         ApiResponseDTO<AppUserDTO> response = new ApiResponseDTO<>(appUserDTO, "User found successfully", true);
-
         return ResponseEntity.ok(response);
     }
 
