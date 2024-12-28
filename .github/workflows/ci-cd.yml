@@ -28,7 +28,7 @@ jobs:
       # 4. Construir la imagen Docker
       - name: Build Docker image
         run: |
-          docker build -t another-todo-list-app:latest .
+          docker build -t another-todo-list:latest .
 
       # 5. Subir la imagen a Docker Hub
       - name: Push to Docker Hub
@@ -38,8 +38,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push Docker image
         run: |
-          docker tag my-app:latest <dockerhub-username>/another-todo-list-app:latest
-          docker push <dockerhub-username>/another-todo-list-app:latest
+          docker tag my-app:latest <dockerhub-username>/another-todo-list:latest
+          docker push <dockerhub-username>/another-todo-list:latest
 
   deploy:
     runs-on: ubuntu-latest
