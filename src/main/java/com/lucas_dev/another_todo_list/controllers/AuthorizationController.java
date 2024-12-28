@@ -31,11 +31,4 @@ public class AuthorizationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-
-    @GetMapping("/current-user")
-    public Authentication getCurrentUser() {
-        return SecurityContextHolder.getContext().getAuthentication();
-    }
-
-
 }

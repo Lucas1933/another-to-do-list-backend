@@ -1,0 +1,55 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout del código
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Configurar JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 3. Construir la aplicación
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      # 4. Construir la imagen Docker
+      - name: Build Docker image
+        run: |
+          docker build -t another-todo-list-app:latest .
+
+      # 5. Subir la imagen a Docker Hub
+      - name: Push to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push Docker image
+        run: |
+          docker tag my-app:latest <dockerhub-username>/another-todo-list-app:latest
+          docker push <dockerhub-username>/another-todo-list-app:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      # 6. Deploy en Render
+      - name: Trigger Render deployment
+        run: |
+          curl -X POST -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"serviceId": "<render-service-id>"}' \
+          https://api.render.com/v1/services/<render-service-id>/deploys
