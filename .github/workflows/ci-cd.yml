@@ -38,8 +38,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push Docker image
         run: |
-          docker tag my-app:latest <dockerhub-username>/another-todo-list:latest
-          docker push <dockerhub-username>/another-todo-list:latest
+          docker tag my-app:latest ${{ secrets.DOCKER_USERNAME }}/another-todo-list:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/another-todo-list:latest
 
   deploy:
     runs-on: ubuntu-latest
